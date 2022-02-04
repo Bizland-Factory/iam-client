@@ -1,0 +1,258 @@
+#+TITLE:          IAM Client
+#+AUTHOR:        Revision by: Sergio-Feliciano Mendoza-Barrera
+#+DRAWERS:       sfmb
+#+EMAIL:         sergio@bizland.biz
+#+DATE:          \today
+#+DESCRIPTION:   Description
+#+KEYWORDS:      R, data science, research, methodology, julia
+#+LANGUAGE:      en
+#+PROPERTY:      header-args      :session *julia:JuliaAcademy*
+#+OPTIONS:       H:10 num:t toc:nil \n:nil @:t ::t |:t ^:{} -:t f:t *:t <:t d:HIDDEN
+#+OPTIONS:       TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+OPTIONS:       LaTeX:dvipng
+#+INFOJS_OPT:    view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:
+#+LINK_HOME:
+#+XSLT:
+#+STYLE: <link rel="stylesheet" type="text/css" href="dft.css"/>
+
+#+LATEX_CLASS:  tufte-handout
+#+LATEX_CLASS_OPTIONS: [letterpaper]
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \defaultfontfeatures{Ligatures=TeX}
+#+LATEX_HEADER: \usepackage[small,sf,bf]{titlesec}
+#+LATEX_HEADER: \ifx\ifxetex\ifluatex\else % if lua- or xelatex http://tex.stackexchange.com/a/140164/1913
+#+LATEX_HEADER:   \newcommand{\textls}[2][5]{%
+#+LATEX_HEADER:     \begingroup\addfontfeatures{LetterSpace=#1}#2\endgroup
+#+LATEX_HEADER:   }
+#+LATEX_HEADER:   \renewcommand{\allcapsspacing}[1]{\textls[15]{#1}}
+#+LATEX_HEADER:   \renewcommand{\smallcapsspacing}[1]{\textls[10]{#1}}
+#+LATEX_HEADER:   \renewcommand{\allcaps}[1]{\textls[15]{\MakeTextUppercase{#1}}}
+#+LATEX_HEADER:   \renewcommand{\smallcaps}[1]{\smallcapsspacing{\scshape\MakeTextLowercase{#1}}}
+#+LATEX_HEADER:   \renewcommand{\textsc}[1]{\smallcapsspacing{\textsmallcaps{#1}}}
+#+LATEX_HEADER:   \fi
+
+#+LATEX_HEADER: \setmainfont{Adobe Caslon Pro}
+#+LATEX_HEADER: \setmonofont{Anonymous Pro}
+#+LATEX_HEADER: \usepackage{color}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{gensymb}
+#+LATEX_HEADER: \usepackage{nicefrac}
+
+#+LATEX_HEADER: \usepackage{booktabs} % book-quality tables
+#+LATEX_HEADER: \usepackage{units}    % non-stacked fractions and better unit spacing
+#+LATEX_HEADER: \usepackage{multicol} % multiple column layout facilities
+#+LATEX_HEADER: \usepackage{lipsum}   % filler text
+#+LATEX_HEADER: \usepackage{fancyvrb} % extended verbatim environments
+#+LATEX_HEADER: \fvset{fontsize=\normalsize}% default font size for fancy-verbatim environments
+
+#+LATEX_HEADER: \newcommand{\doccmd}[1]{\texttt{\textbackslash#1}}% command name -- adds backslash automatically
+#+LATEX_HEADER: \newcommand{\docopt}[1]{\ensuremath{\langle}\textrm{\textit{#1}}\ensuremath{\rangle}}% optional command argument
+#+LATEX_HEADER: \newcommand{\docarg}[1]{\textrm{\textit{#1}}}% (required) command argument
+#+LATEX_HEADER: \newcommand{\docenv}[1]{\textsf{#1}}% environment name
+#+LATEX_HEADER: \newcommand{\docpkg}[1]{\texttt{#1}}% package name
+#+LATEX_HEADER: \newcommand{\doccls}[1]{\texttt{#1}}% document class name
+#+LATEX_HEADER: \newcommand{\docclsopt}[1]{\texttt{#1}}% document class option name
+#+LATEX_HEADER: \newenvironment{docspec}{\begin{quote}\noindent}{\end{quote}}% command specification environment
+
+#+LATEX_HEADER: \usepackage{babel}
+#+LATEX_HEADER: \usepackage[fixlanguage]{babelbib}
+#+LATEX_HEADER: \selectbiblanguage{english}
+#+LATEX_HEADER: \usepackage[sort,round]{natbib}
+#+LATEX_HEADER: \usepackage[nottoc]{tocbibind}
+#+LATEX_HEADER: \usepackage{csquotes}
+#+LATEX_HEADER: \usepackage{multirow}
+#+STARTUP: entitiespretty
+
+#+LATEX_HEADER: \hypersetup{colorlinks}
+#+LATEX_HEADER: \definecolor{sectionColor}{rgb}{0.5765,0.0353,0.1176} %% red
+#+LATEX_HEADER: \definecolor{citeColor}{rgb}{0.365,0.408,0.42} %% red
+#+LATEX_HEADER: \definecolor{captionColor}{rgb}{0.5765,0.0353,0.1176} %% red
+#+LATEX_HEADER: \subsectionfont{\color{sectionColor}}
+#+LATEX_HEADER: \sectionfont{\color{sectionColor}}
+#+LATEX_HEADER: \hypersetup{%
+#+LATEX_HEADER:     pdfborder = {0 0 0},
+#+LATEX_HEADER:     bookmarksdepth = section,
+#+LATEX_HEADER:     citecolor = sectionColor,
+#+LATEX_HEADER:     linkcolor = sectionColor,
+#+LATEX_HEADER:     urlcolor = citeColor,
+#+LATEX_HEADER:   }
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage[font={footnotesize,it,color=captionColor},figurename=Fig.,labelfont={bf}]{caption}
+
+#+LATEX_HEADER: \newcommand{\degC}{$^\circ$C{}}
+#+LATEX_HEADER: \usepackage{fancyhdr} \pagestyle{fancyplain} \fancyhf{} \renewcommand{\headrulewidth}{0pt} \lhead{\scriptsize{SERGIO-FELICIANO MENDOZA-BARRERA}} \rhead{\scriptsize{ANALYSIS $\cdot\ 2021\ \cdot$ BIZLAND FACTORY}}\fancyfoot[RO, LE]{\thepage}
+#+LATEX_HEADER: \newcommand\at[2]{\left.#1\right|_{#2}}
+#+LATEX_HEADER: \newcommand\HHI{\mathit{HHI}}
+#+LATEX_HEADER: \newcommand\CR{\mathit{CR}}
+#+LATEX_HEADER: \definecolor{bg}{rgb}{0.973, 0.973, 0.973}
+
+#+STYLE: <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
+#+ATTR_HTML: width="500px"
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://cdn.globallabs.org/org-html-themes/styles/bigblow/css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://cdn.globallabs.org/org-html-themes/styles/bigblow/css/bigblow.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://cdn.globallabs.org/org-html-themes/styles/bigblow/css/hideshow.css"/>
+#+HTML_HEAD: <script type="text/javascript" src="https://cdn.globallabs.org/org-html-themes/styles/bigblow/js/jquery-1.11.0.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://cdn.globallabs.org/org-html-themes/styles/bigblow/js/jquery-ui-1.10.2.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://cdn.globallabs.org/org-html-themes/styles/bigblow/js/jquery.localscroll-min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://cdn.globallabs.org/org-html-themes/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://cdn.globallabs.org/org-html-themes/styles/bigblow/js/jquery.zclip.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://cdn.globallabs.org/org-html-themes/styles/bigblow/js/bigblow.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://cdn.globallabs.org/org-html-themes/styles/bigblow/js/hideshow.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="https://cdn.globallabs.org/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+
+#+TODO: TODO(t) STARTED(s) WAITING(w) REVISION(r) | DONE(d) CANCELED(c)
+#+TAGS: problem(p) task(t) objective(o) general(g) specific(s) hypothesis(h) method(m)
+
+#+begin_abstract
+/IAM client in Java./ The [[https://github.com/Bizland-Factory/iam-client][GitHub repository is here]].
+#+end_abstract
+
+* Table of content
+    :PROPERTIES:
+    :CUSTOM_ID: table-of-content
+    :END:
+
+- /Introduction/
+- /Configure IAM-Client/
+- /How to run IAM-Client service/
+- /Functionalities/
+
+* Introduction
+   :PROPERTIES:
+   :CUSTOM_ID: introduction
+   :END:
+
+** IAM-Client service motivation
+    :PROPERTIES:
+    :CUSTOM_ID: iam-client-service-motivation
+    :END:
+
+IAM-Client service is an IAM's client side application used to generate IAM login url using the client certificates. and its main motivation is to ease the intgration process to IAM service.
+
+** Technologies
+    :PROPERTIES:
+    :CUSTOM_ID: technologies
+    :END:
+
+- ~Java 8~
+- ~Spring boot~
+- ~Spring web REST~
+- ~Lombok~
+- ~Java key store~
+- ~Maven~
+
+* Configure IAM-Client
+   :PROPERTIES:
+   :CUSTOM_ID: configure-iam-client
+   :END:
+
+In order to use the service properly we need to fill some properties from [[https://github.com/Bizland-Factory/iam-client/blob/main/src/main/resources/application.properties][application.properties]] file:
+
+** To build IAM URL, search for each key in the specified file and fill it with the proper value
+     :PROPERTIES:
+     :CUSTOM_ID: to-build-iam-url-search-for-each-key-in-the-specified-file-and-fill-it-with-the-proper-value.
+     :END:
+In the properties file the client will find a group of properties start with ~iam.request.url~ this group will help the client build IAM request url. Some of the values already filled the client may keep it as it is.
+
+| property     | key                            | value explain                            |
+|--------------+--------------------------------+------------------------------------------|
+| host         | ~iam.request.url.host~         | Check if the client is using             |
+|              |                                | the staging or production host.          |
+| client-id    | ~iam.request.url.client-id~    | it is the /reference number/             |
+|              |                                | giving to the client.                    |
+| redirect-uri | ~iam.request.url.redirect-uri~ | /redirect-uri is a static/               |
+|              |                                | please use the submitted redirect-uri to |
+|              |                                | the NIC *without queries or extra path*. |
+
+*NOTE:* /for Production please use the following host:/ https://iam.elm.sa/authservice/authorize
+
+*NOTE:* /for Staging please use the following host:/ https://iambeta.elm.sa/authservice/authorize
+
+Another group will start with ~jks.store~ this group will help the client refereing to the key store
+
+| property   | key                    | value explain                           |
+|------------+------------------------+-----------------------------------------|
+| path       | ~jks.store.path~       | the full system path to the key store . |
+| pass       | ~jks.store.pass~       | provide the password for the key store. |
+| store-type | ~jks.store.store-type~ | specify the key store type. (e.g. JKS)  |
+
+lastly the client is going to refer to the certificates, the last group of properties will start with ~certificate.client~, which will help to fetch certificate from the configured key store.
+
+| property         | key                                   | value explain                   |
+|------------------+---------------------------------------+---------------------------------|
+| private.alias    | ~certificate.client.private.alias~    | refer to the private key alias  |
+|                  |                                       | that giving to the certificate  |
+|                  |                                       | once imported to the key store. |
+| private.password | ~certificate.client.private.password~ | refer to the private key's      |
+|                  |                                       | password of the certificate.    |
+|                  | ~certificate.client.public.alias~     | refer to the public key alias   |
+|                  |                                       | that giving to the certificate  |
+|                  |                                       | once imported to the key store. |
+| public.password  | ~certificate.client.public.password~  | refer to the private key's      |
+|                  |                                       | password of the certificate     |
+|                  |                                       | /if exists/.                    |
+
+** Once you fill the previous key value pairs you are ready to run the application
+     :PROPERTIES:
+     :CUSTOM_ID: once-you-fill-the-previous-key-value-pairs-you-are-ready-to-run-the-application.
+     :END:
+In the following section you will know how to generate IAM url and how to validate it.
+
+* How to run IAM-Client service
+   :PROPERTIES:
+   :CUSTOM_ID: how-to-run-iam-client-service
+   :END:
+
+- [[https://www.youtube.com/watch?v=W2Ccvpt4C3A&ab_channel=EduonixLearningSolutions][Linux remote server]]
+- TO-DO
+
+* Functionalities
+   :PROPERTIES:
+   :CUSTOM_ID: functionalities
+   :END:
+IAM-Client service exposes the following rest endpoints:
+
+** Generate IAM url
+    :PROPERTIES:
+    :CUSTOM_ID: generate-iam-url
+    :END:
+
+The client can directly generate login url by hitting the rest endpoint:
+
+#+begin_quote
+  GET http://localhost:8088/url
+#+end_quote
+
+and it will return back login url as string and you may use it to test.
+
+*NOTE:* /In order to access IAM servers the client server need to be
+configured in the NIC./
+
+** Validate IAM url
+    :PROPERTIES:
+    :CUSTOM_ID: validate-iam-url
+    :END:
+
+The client may validate login url by hitting the rest endpoint:
+
+#+begin_example
+  POST http://localhost:8088/url
+#+end_example
+
+#+begin_example
+  @RequestBody
+  {"url":"https://iambeta.elm.sa/authservice/authorize?..."}
+#+end_example
+
+and it will return back validation response with ~HTTP_STATUS 200~ if it is valid, and with ~HTTP_STATUS 422~ with error description if it is invalid login url.
+
+* Extra documentation
+
+The following pages are documents related to the IAM, NIC and ELM services.
+
+EOF

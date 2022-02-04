@@ -40,3 +40,9 @@ build/
 
 ### Spring boot ###
 application-*.properties
+
+### Emacs
+*~
+*.tex
+_minted*
+*.bbl
